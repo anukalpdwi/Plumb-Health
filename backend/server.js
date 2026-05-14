@@ -65,7 +65,10 @@ apiRouter.use('/user', userRoutes)
 apiRouter.use('/diet', dietRoutes)
 
 // Mount API router
+// We mount on both /api and / to handle cases where Vercel might strip the prefix
 app.use('/api', apiRouter)
+app.use('/', apiRouter)
+
 
 // Connect to MongoDB
 mongoose.connect(MONGODB_URI)
