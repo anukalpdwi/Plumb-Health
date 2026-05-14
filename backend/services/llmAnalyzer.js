@@ -197,23 +197,10 @@ async function analyzeWithGroq(filePath, apiKey, comparisonContext = '') {
       imageBase64List.push(fileBuffer.toString('base64'))
       console.log('    → [Groq Vision] Using uploaded image directly')
     } else {
-      // Convert PDF pages to PNG images
-      console.log('    → [Groq Vision] Converting PDF pages to images...')
-      const require = createRequire(import.meta.url)
-      const pdfImgConvert = require('pdf-img-convert')
-      const convert = pdfImgConvert.convert || pdfImgConvert.default?.convert || pdfImgConvert.default
-      const pagesAsUint8 = await convert(filePath, { 
-        width: 1200, 
-        height: 1600,
-        page_numbers: [1, 2, 3, 4, 5]  // First 5 pages max
-      })
-      
-      for (const pageData of pagesAsUint8) {
-        const b64 = Buffer.from(pageData).toString('base64')
-        imageBase64List.push(b64)
-      }
-      console.log(`    → [Groq Vision] Converted ${imageBase64List.length} pages to images`)
+      // PDF to image conversion skipped (canvas dependency issues on Vercel)
+      console.log('    → [Groq Vision] Skipping vision mode for PDF (using text extraction instead)')
     }
+
 
     if (imageBase64List.length > 0) {
       // Build multimodal message with images
