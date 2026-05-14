@@ -70,7 +70,8 @@ router.post('/upload-report', protect, upload.single('report'), async (req, res)
       mimetype: req.file.mimetype,
       size: req.file.size,
       path: req.file.path,
-      url: `/uploads/${req.file.filename}` // Relative URL for frontend access
+      url: `/api/uploads/${req.file.filename}` // Relative URL for frontend access
+
     }
 
     // Here you could save file info to database for the user

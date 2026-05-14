@@ -27,8 +27,45 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/plumb-
 app.use(cors())
 app.use(express.json())
 
-// Serve static files from uploads folder
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
+// Connect to MongoDB
+
+// Create API router
+const apiRouter = express.Router()
+
+// Serve static files from uploads folder (now under /api/uploads)
+apiRouter.use('/uploads', express.static(path.join(__dirname, 'uploads')))
+
+// Routes
+apiRouter.get('/', (req, res) => {
+  res.json({
+    message: 'Plumb Health AI Backend Running',
+    version: '2.0.0',
+    timestamp: new Date().toISOString()
+  })
+})
+
+// Health check endpoint
+apiRouter.get('/health', (req, res) => {
+  res.json({ status: 'ok' })
+})
+
+// Authentication routes
+apiRouter.use('/auth', authRoutes)
+
+// Upload routes
+apiRouter.use('/', uploadRoutes)
+
+// Report history routes
+apiRouter.use('/reports', reportRoutes)
+
+// User / membership routes
+apiRouter.use('/user', userRoutes)
+
+// Diet tracking routes
+apiRouter.use('/diet', dietRoutes)
+
+// Mount API router
+app.use('/api', apiRouter)
 
 // Connect to MongoDB
 mongoose.connect(MONGODB_URI)
@@ -40,39 +77,10 @@ mongoose.connect(MONGODB_URI)
     console.log('💡 Make sure MongoDB is running or update MONGODB_URI in .env')
   })
 
-// Routes
-app.get('/', (req, res) => {
-  res.json({
-    message: 'Plumb Health AI Backend Running',
-    version: '2.0.0',
-    timestamp: new Date().toISOString()
-  })
-})
-
-// Health check endpoint
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok' })
-})
-
-// Authentication routes
-app.use('/auth', authRoutes)
-
-// Upload routes
-app.use('/', uploadRoutes)
-
-// Report history routes
-app.use('/reports', reportRoutes)
-
-// User / membership routes
-app.use('/user', userRoutes)
-
-// Diet tracking routes
-app.use('/diet', dietRoutes)
-
 // ─────────────────────────────────────────────────────────────
 // AI-Powered Report Analysis (Gemini → Groq fallback)
 // ─────────────────────────────────────────────────────────────
-app.post('/analyze-report', protect, async (req, res) => {
+apiRouter.post('/analyze-report', protect, async (req, res) => {
   try {
     const { filePath } = req.body
 
