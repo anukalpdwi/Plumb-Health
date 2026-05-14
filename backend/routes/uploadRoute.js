@@ -13,8 +13,13 @@ const __dirname = path.dirname(__filename)
 // Configure multer storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, '../uploads/'))
+    // Use /tmp for Vercel/Production environments, otherwise use local uploads folder
+    const uploadDir = process.env.VERCEL || process.env.NODE_ENV === 'production' 
+      ? '/tmp' 
+      : path.join(__dirname, '../uploads/')
+    cb(null, uploadDir)
   },
+
   filename: (req, file, cb) => {
     // Generate unique filename with timestamp
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
