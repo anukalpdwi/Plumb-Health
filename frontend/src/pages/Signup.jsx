@@ -80,9 +80,7 @@ export default function Signup() {
       <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10">
         <div className="flex justify-center mb-8">
            <Link to="/" className="group flex items-center space-x-3">
-              <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-blue-600 shadow-lg shadow-blue-500/30 group-hover:scale-105 transition-transform duration-300">
-                <Hexagon className="h-6 w-6 text-white" />
-              </div>
+              <img src="/logo.png" alt="Plumb Health Logo" className="w-12 h-12 object-contain drop-shadow-lg group-hover:scale-105 transition-transform duration-300" />
               <span className="text-2xl font-bold tracking-tight text-[#0f1f38] font-['Outfit']">Plumb <span className="text-blue-600">Health</span></span>
            </Link>
         </div>

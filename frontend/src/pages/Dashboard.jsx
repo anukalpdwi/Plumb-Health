@@ -6,7 +6,8 @@ import {
   Activity, Heart, Shield, Lightbulb, Download, Trash2,
   Clock, ChevronRight, Crown, Star, Menu, X, Sparkles, Zap, Brain, Users,
   ExternalLink, Play,
-  PieChart as PieChartIcon, BarChart as BarChartIcon, Utensils, ArrowLeft
+  PieChart as PieChartIcon, BarChart as BarChartIcon, Utensils, ArrowLeft,
+  LogOut
 } from 'lucide-react'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
@@ -302,77 +303,83 @@ export default function Dashboard() {
     <div className="min-h-screen bg-[#fafbfc] text-[#0f1f38] font-sans selection:bg-blue-600/20">
       
       {/* ───────── Top Navigation (Clinical Light) ───────── */}
-      <nav className="fixed w-full top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100 shadow-sm">
-        <div className="max-w-[1600px] mx-auto px-4 lg:px-6 py-3 flex justify-between items-center">
+      <nav className="fixed w-full top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/50 h-16 transition-all duration-300">
+        <div className="max-w-[1600px] mx-auto px-4 lg:px-8 h-full flex justify-between items-center">
           <div className="flex items-center space-x-4">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="p-2 rounded-lg hover:bg-gray-100 text-gray-600 transition-colors border border-transparent"
+              className="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-xl transition-all duration-200"
+              aria-label="Toggle Navigation Sidebar"
             >
               {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
-            <div className="flex items-center space-x-2 border-l border-gray-200 pl-4">
-              <div className="w-8 h-8 rounded bg-blue-600 flex items-center justify-center shadow-inner">
-                <Brain className="h-5 w-5 text-white" />
-              </div>
-              <span className="text-xl font-bold text-[#0f1f38] hidden sm:block tracking-tight font-['Outfit']">
-                Plumb <span className="text-blue-600">Health</span>
+            <div className="flex items-center space-x-2 border-l border-slate-200/80 pl-4 cursor-pointer group" onClick={() => navigate('/')}>
+              <img src="/logo.png" alt="Plumb Health Logo" className="w-8 h-8 object-contain drop-shadow-sm group-hover:scale-105 transition-transform duration-500" />
+              <span className="text-xl font-bold text-slate-800 hidden sm:block tracking-tight font-['Outfit'] select-none">
+                Plumb<span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent font-black ml-0.5">Health</span>
               </span>
             </div>
           </div>
-          <div className="flex items-center space-x-5">
+          <div className="flex items-center space-x-4">
             {user.membershipType === 'pro' && (
-              <>
+              <div className="hidden md:flex items-center space-x-1">
                 <button
                   onClick={() => navigate('/consultation')}
-                  className="hidden sm:inline-flex items-center gap-2 text-sm font-bold bg-amber-500 hover:bg-amber-400 text-slate-900 px-4 py-2 rounded-full transition-colors shadow-lg shadow-amber-500/20 mr-2"
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 px-3.5 py-2 rounded-xl hover:bg-slate-50 transition-all duration-200 font-['Outfit']"
                 >
-                  <Heart className="h-4 w-4" /> Request Doctor Consultation
+                  <Heart className="h-4 w-4 text-rose-500" />
+                  Request Consultation
                 </button>
                 <button
                   onClick={handleVideoConsultation}
                   disabled={videoLoading}
-                  className="hidden sm:inline-flex items-center gap-2 text-sm font-bold bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-full transition-colors shadow-lg shadow-blue-500/20"
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 px-3.5 py-2 rounded-xl hover:bg-slate-50 transition-all duration-200 font-['Outfit']"
                 >
-                  <Video className="h-4 w-4" /> {videoLoading ? 'Starting...' : 'Video Consult'}
+                  <Video className="h-4 w-4 text-blue-500" />
+                  {videoLoading ? 'Starting...' : 'Video Consult'}
                 </button>
-              </>
+              </div>
             )}
-            {user.membershipType === 'pro' ? (
-              <span className="hidden sm:inline-flex items-center text-[10px] font-black bg-blue-500 text-white px-2 py-1 rounded">
-                PRO PLAN
-              </span>
-            ) : null}
             
             <button
               onClick={() => navigate('/upload')}
-              className="bg-blue-600 hover:bg-blue-700 text-white border border-blue-600 text-sm font-bold px-5 py-2 rounded-full transition-colors flex items-center shadow-[0_8px_20px_rgba(37,99,235,0.2)] font-['Outfit'] uppercase tracking-[0.1em] text-[10px]"></button>
-            <button
-              onClick={() => navigate('/upload')}
-              className="hidden sm:flex bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold px-5 py-2.5 rounded-full transition-all items-center shadow-lg shadow-blue-500/20 font-['Outfit'] uppercase tracking-[0.15em]"
+              className="hidden sm:flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all duration-200 hover:-translate-y-0.5 shadow-sm active:scale-95 font-['Outfit']"
             >
-              <FileText className="h-3.5 w-3.5 mr-2" /> Upload Report
+              <FileText className="h-4 w-4" />
+              Upload Report
             </button>
-            <button
-              onClick={() => navigate('/diet')}
-              className="hidden sm:flex bg-white hover:bg-gray-50 text-blue-600 border border-gray-100 text-[10px] font-bold px-5 py-2.5 rounded-full transition-all items-center shadow-sm font-['Outfit'] uppercase tracking-[0.15em]"
-            >
-              <Utensils className="h-3.5 w-3.5 mr-2" /> Food Analyzer
-            </button>
-            <div className="h-6 w-[1px] bg-gray-100 hidden sm:block"></div>
-            <div className="hidden sm:flex flex-col items-end">
-              <span className="text-sm font-bold text-[#0f1f38] leading-tight font-['Outfit']">{user.name}</span>
-              <span className="text-[9px] text-gray-400 font-bold uppercase tracking-widest font-['Outfit']">ID: {user.id?.substring(0,6) || user._id?.substring(0,6) || 'N/A'}</span>
-            </div>
-            <div className="w-10 h-10 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 font-bold text-sm shadow-sm font-['Outfit']">
-               {user.name?.charAt(0).toUpperCase()}
+            
+            <div className="h-5 w-[1px] bg-slate-200/70 hidden sm:block"></div>
+            
+            {/* User Profile Info Card */}
+            <div className="hidden sm:flex items-center gap-3 pl-2 select-none">
+              <div className="flex flex-col items-end">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-semibold text-slate-800 font-['Outfit']">{user.name}</span>
+                  {user.membershipType === 'pro' && (
+                    <span className="text-[10px] text-amber-600 font-bold uppercase tracking-wider font-['Outfit'] flex items-center">
+                      <Crown className="h-3.5 w-3.5 text-amber-500 fill-amber-500/20" />
+                    </span>
+                  )}
+                </div>
+                <span className="text-[9px] text-slate-400 font-medium tracking-normal font-['Outfit']">ID: {user.id?.substring(0,6) || user._id?.substring(0,6) || 'N/A'}</span>
+              </div>
+              <div className="relative">
+                <div className="w-9 h-9 rounded-xl bg-slate-50 text-slate-700 flex items-center justify-center font-bold text-sm border border-slate-200/80 font-['Outfit']">
+                   {user.name?.charAt(0).toUpperCase()}
+                </div>
+                {user.membershipType === 'pro' && (
+                  <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-amber-500 border border-white rounded-full shadow-sm" />
+                )}
+              </div>
             </div>
             
             <button
               onClick={handleLogout}
-              className="text-gray-400 hover:text-red-500 text-[10px] font-bold transition-colors ml-2 uppercase tracking-[0.2em] font-['Outfit']"
+              className="p-2 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-50 transition-all duration-200"
+              title="Sign Out"
             >
-              Sign Out
+              <LogOut className="h-[18px] w-[18px]" />
             </button>
           </div>
         </div>
@@ -384,9 +391,9 @@ export default function Dashboard() {
         <aside className={`
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
           fixed lg:static inset-y-0 left-0 z-40 w-72 lg:w-[320px]
-          bg-[#f8fafc] border-r border-gray-200
-          transition-transform duration-300 ease-in-out
-          pt-[64px] lg:pt-0 overflow-y-auto h-full lg:shadow-none shadow-2xl
+          bg-white/40 backdrop-blur-3xl border-r border-gray-100/50
+          transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]
+          pt-[64px] lg:pt-0 overflow-y-auto h-full lg:shadow-[4px_0_24px_rgba(0,0,0,0.01)] shadow-2xl
         `}>
           <div className="p-6">
             <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
@@ -423,10 +430,10 @@ export default function Dashboard() {
                       exit={{ opacity: 0, scale: 0.95 }}
                       key={report._id}
                       className={`
-                        group relative p-4 rounded-lg cursor-pointer transition-all duration-200 shadow-sm
+                        group relative p-5 rounded-[20px] cursor-pointer transition-all duration-300
                         ${selectedReport?._id === report._id
-                          ? 'bg-blue-600 border border-blue-600 text-white'
-                          : 'bg-white border border-gray-200 hover:border-blue-300 hover:shadow-md'
+                          ? 'bg-gradient-to-br from-blue-600 to-indigo-700 shadow-[0_8px_20px_rgba(37,99,235,0.25)] text-white border border-transparent'
+                          : 'bg-white border border-gray-100/80 hover:border-blue-200 hover:shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:-translate-y-0.5'
                         }
                       `}
                       onClick={() => loadReport(report)}
@@ -492,33 +499,33 @@ export default function Dashboard() {
             <div className="mt-8 border-t border-gray-100 pt-8 space-y-4">
                 <button
                   onClick={() => setActiveView('home')}
-                  className={`w-full p-4 rounded-2xl flex items-center space-x-3 transition-all font-['Outfit'] ${
-                    activeView === 'home' ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' : 'bg-white border border-gray-100 text-[#0f1f38] hover:border-blue-200 clinical-shadow'
+                  className={`w-full p-4 rounded-[20px] flex items-center space-x-4 transition-all duration-300 font-['Outfit'] ${
+                    activeView === 'home' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-[0_8px_20px_rgba(37,99,235,0.25)]' : 'bg-white border border-gray-100/50 text-gray-500 hover:text-[#0f1f38] hover:border-blue-100 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] hover:-translate-y-0.5'
                   }`}
                 >
                   <Sparkles className={`flex-shrink-0 h-5 w-5 ${activeView === 'home' ? 'text-white' : 'text-blue-500'}`} />
-                  <span className="text-sm font-bold tracking-tight">Health Intelligence</span>
+                  <span className="text-[13px] font-bold tracking-wide">Health Intelligence</span>
                 </button>
                 <button
                   onClick={() => navigate('/profile')}
-                  className="w-full bg-white border border-gray-100 text-[#0f1f38] p-4 rounded-2xl flex items-center space-x-3 transition-all font-['Outfit'] hover:border-blue-200 clinical-shadow"
+                  className="w-full p-4 rounded-[20px] flex items-center space-x-4 transition-all duration-300 font-['Outfit'] bg-white border border-gray-100/50 text-gray-500 hover:text-[#0f1f38] hover:border-blue-100 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] hover:-translate-y-0.5"
                 >
-                  <Users className="flex-shrink-0 h-5 w-5 text-gray-400" />
-                  <span className="text-sm font-bold tracking-tight">Patient Profile</span>
+                  <Users className="flex-shrink-0 h-5 w-5 text-gray-400 group-hover:text-blue-500 transition-colors" />
+                  <span className="text-[13px] font-bold tracking-wide">Patient Profile</span>
                 </button>
                 <button
                   onClick={() => navigate('/history')}
-                  className="w-full bg-white border border-gray-100 text-[#0f1f38] p-4 rounded-2xl flex items-center space-x-3 transition-all font-['Outfit'] hover:border-blue-200 clinical-shadow"
+                  className="w-full p-4 rounded-[20px] flex items-center space-x-4 transition-all duration-300 font-['Outfit'] bg-white border border-gray-100/50 text-gray-500 hover:text-[#0f1f38] hover:border-blue-100 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] hover:-translate-y-0.5"
                 >
-                  <Activity className="flex-shrink-0 h-5 w-5 text-gray-400" />
-                  <span className="text-sm font-bold tracking-tight">Diagnostic History</span>
+                  <Activity className="flex-shrink-0 h-5 w-5 text-gray-400 group-hover:text-blue-500 transition-colors" />
+                  <span className="text-[13px] font-bold tracking-wide">Diagnostic History</span>
                 </button>
                 <button
                   onClick={() => navigate('/diet')}
-                  className="w-full bg-white border border-gray-100 text-[#0f1f38] p-4 rounded-2xl flex items-center space-x-3 transition-all font-['Outfit'] hover:border-blue-200 clinical-shadow"
+                  className="w-full p-4 rounded-[20px] flex items-center space-x-4 transition-all duration-300 font-['Outfit'] bg-white border border-gray-100/50 text-gray-500 hover:text-[#0f1f38] hover:border-blue-100 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] hover:-translate-y-0.5"
                 >
-                  <Utensils className="flex-shrink-0 h-5 w-5 text-blue-500" />
-                  <span className="text-sm font-bold tracking-tight">Food Analyzer</span>
+                  <Utensils className="flex-shrink-0 h-5 w-5 text-emerald-500" />
+                  <span className="text-[13px] font-bold tracking-wide">Food Analyzer</span>
                 </button>
                 
                 {user.membershipType !== 'pro' ? (
@@ -557,30 +564,31 @@ export default function Dashboard() {
               className="max-w-[1200px] mx-auto space-y-10 pb-20"
             >
               {/* Row 1: Hero Welcome */}
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                <div>
-                  <h1 className="text-4xl font-black text-[#0f1f38] mb-2">
-                    Good {new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 17 ? 'afternoon' : 'evening'}, {user.name.split(' ')[0]}
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative">
+                <div className="absolute -top-20 -left-20 w-64 h-64 bg-blue-400/10 rounded-full blur-3xl pointer-events-none" />
+                <div className="relative z-10">
+                  <h1 className="text-4xl lg:text-5xl font-black text-[#0f1f38] mb-3 tracking-tight font-['Outfit']">
+                    Good {new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 17 ? 'afternoon' : 'evening'}, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">{user.name.split(' ')[0]}</span>
                   </h1>
-                  <p className="text-gray-500 font-medium">Your health intelligence is up to date.</p>
+                  <p className="text-gray-500 font-medium text-lg">Your health intelligence is up to date.</p>
                 </div>
-                <div className="flex items-center gap-4">
-                  <div className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center">
-                      <Sparkles className="h-5 w-5 text-blue-600" />
+                <div className="flex items-center gap-4 relative z-10">
+                  <div className="bg-white/80 backdrop-blur-md border border-gray-100/50 rounded-[24px] p-5 shadow-[0_8px_30px_rgba(0,0,0,0.04)] flex items-center gap-5 transition-transform hover:-translate-y-1">
+                    <div className="w-12 h-12 rounded-[16px] bg-blue-50/80 flex items-center justify-center text-blue-600 shadow-inner">
+                      <Sparkles className="h-6 w-6" />
                     </div>
                     <div>
-                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Health Score</p>
-                      <p className="text-xl font-black text-blue-900">{reports.length > 0 ? reports[0].overallRisk?.score || 0 : 'N/A'}</p>
+                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 font-['Outfit']">Health Score</p>
+                      <p className="text-2xl font-black text-[#0f1f38] font-['Outfit']">{reports.length > 0 ? reports[0].overallRisk?.score || 0 : 'N/A'}</p>
                     </div>
                   </div>
-                  <div className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center">
-                      <Zap className="h-5 w-5 text-emerald-600" />
+                  <div className="bg-white/80 backdrop-blur-md border border-gray-100/50 rounded-[24px] p-5 shadow-[0_8px_30px_rgba(0,0,0,0.04)] flex items-center gap-5 transition-transform hover:-translate-y-1">
+                    <div className="w-12 h-12 rounded-[16px] bg-emerald-50/80 flex items-center justify-center text-emerald-600 shadow-inner">
+                      <Zap className="h-6 w-6" />
                     </div>
                     <div>
-                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Diet Streak</p>
-                      <p className="text-xl font-black text-emerald-900">3 Days</p>
+                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 font-['Outfit']">Diet Streak</p>
+                      <p className="text-2xl font-black text-[#0f1f38] font-['Outfit']">3 Days</p>
                     </div>
                   </div>
                 </div>
@@ -597,14 +605,14 @@ export default function Dashboard() {
                   <button 
                     key={i}
                     onClick={hub.action}
-                    className={`p-6 bg-white border border-gray-200 rounded-2xl text-left hover:shadow-lg transition-all active:scale-95 group overflow-hidden relative`}
+                    className={`p-8 bg-white border border-gray-100/50 rounded-[32px] text-left hover:shadow-[0_20px_40px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-1 group overflow-hidden relative`}
                   >
-                    <div className={`w-12 h-12 rounded-xl bg-${hub.color}-50 flex items-center justify-center mb-4 text-${hub.color}-600 group-hover:scale-110 transition-transform`}>
+                    <div className={`absolute inset-0 bg-gradient-to-br from-${hub.color}-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                    <div className={`relative z-10 w-14 h-14 rounded-[20px] bg-${hub.color}-50 flex items-center justify-center mb-6 text-${hub.color}-600 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-sm`}>
                       {hub.icon}
                     </div>
-                    <p className="font-black text-[#0f1f38]">{hub.label}</p>
-                    <p className="text-xs text-gray-400 font-bold uppercase tracking-tighter mt-1">{hub.sub}</p>
-                    <div className={`absolute -right-2 -bottom-2 w-12 h-12 bg-${hub.color}-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity`} />
+                    <p className="font-black text-[#0f1f38] text-lg font-['Outfit'] relative z-10">{hub.label}</p>
+                    <p className="text-[11px] text-gray-400 font-bold uppercase tracking-[0.15em] mt-2 relative z-10">{hub.sub}</p>
                   </button>
                 ))}
               </div>
@@ -613,19 +621,21 @@ export default function Dashboard() {
               <div className="grid lg:grid-cols-12 gap-8">
                 {/* Left: Recent Reports */}
                 <div className="lg:col-span-8 space-y-6">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-black text-[#0f1f38] text-lg flex items-center gap-2">
-                      <Clock className="h-5 w-5 text-blue-600" />
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="font-black text-[#0f1f38] text-xl flex items-center gap-3 font-['Outfit'] tracking-tight">
+                      <Clock className="h-6 w-6 text-blue-600" />
                       Recent Health Records
                     </h3>
-                    <button onClick={() => navigate('/history')} className="text-sm font-bold text-blue-600 hover:underline">View All</button>
+                    <button onClick={() => navigate('/history')} className="text-[11px] font-bold uppercase tracking-widest text-blue-600 hover:text-blue-700 transition-colors">View All →</button>
                   </div>
                   
                   {reports.length === 0 ? (
-                    <div className="bg-white border-2 border-dashed border-gray-100 rounded-2xl p-20 text-center">
-                      <FileText className="h-12 w-12 text-gray-200 mx-auto mb-4" />
-                      <p className="font-bold text-gray-400">No clinical records yet</p>
-                      <button onClick={() => navigate('/upload')} className="mt-4 text-blue-600 font-bold text-sm">Upload first report →</button>
+                    <div className="bg-white/60 backdrop-blur-sm border border-gray-100/50 rounded-[32px] p-20 text-center shadow-[0_8px_30px_rgba(0,0,0,0.02)]">
+                      <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <FileText className="h-8 w-8 text-gray-300" />
+                      </div>
+                      <p className="font-bold text-gray-400 font-['Outfit'] text-lg">No clinical records yet</p>
+                      <button onClick={() => navigate('/upload')} className="mt-4 text-[11px] font-bold uppercase tracking-widest text-blue-600 bg-blue-50 px-6 py-3 rounded-full hover:bg-blue-100 transition-colors">Upload first report</button>
                     </div>
                   ) : (
                     <div className="grid gap-4">
@@ -633,25 +643,27 @@ export default function Dashboard() {
                         <div 
                           key={report._id}
                           onClick={() => loadReport(report)}
-                          className="bg-white border border-gray-200 p-5 rounded-2xl flex items-center justify-between hover:border-blue-400 cursor-pointer transition-all shadow-sm group"
+                          className="bg-white border border-gray-100/50 p-5 lg:p-6 rounded-[24px] flex flex-col sm:flex-row sm:items-center justify-between hover:border-blue-200 cursor-pointer transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_30px_rgba(37,99,235,0.08)] hover:-translate-y-1 group"
                         >
-                          <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-blue-50 group-hover:text-blue-500 transition-colors">
+                          <div className="flex items-center gap-5 mb-4 sm:mb-0">
+                            <div className="w-14 h-14 rounded-[18px] bg-blue-50/50 flex items-center justify-center text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 shadow-inner">
                               <FileText className="h-6 w-6" />
                             </div>
                             <div>
-                              <p className="font-bold text-[#0f1f38]">{report.fileName}</p>
-                              <p className="text-xs text-gray-400 font-medium">{new Date(report.createdAt).toLocaleDateString()}</p>
+                              <p className="font-bold text-[#0f1f38] text-[15px] group-hover:text-blue-600 transition-colors font-['Outfit']">{report.fileName}</p>
+                              <p className="text-[11px] text-gray-400 font-bold uppercase tracking-wider mt-1">{new Date(report.createdAt).toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' })}</p>
                             </div>
                           </div>
-                          <div className="flex items-center gap-3">
-                            <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
-                              report.overallRisk?.level === 'high' ? 'bg-red-50 text-red-700' :
-                              report.overallRisk?.level === 'moderate' ? 'bg-orange-50 text-orange-700' : 'bg-green-50 text-green-700'
+                          <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-6">
+                            <span className={`px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] font-['Outfit'] ${
+                              report.overallRisk?.level === 'high' ? 'bg-red-50 text-red-700 border border-red-100/50 shadow-[0_4px_10px_rgba(239,68,68,0.1)]' :
+                              report.overallRisk?.level === 'moderate' ? 'bg-orange-50 text-orange-700 border border-orange-100/50 shadow-[0_4px_10px_rgba(249,115,22,0.1)]' : 'bg-green-50 text-green-700 border border-green-100/50 shadow-[0_4px_10px_rgba(34,197,94,0.1)]'
                             }`}>
                               {report.overallRisk?.level || 'N/A'} Risk
                             </span>
-                            <ChevronRight className="h-5 w-5 text-gray-300 group-hover:text-blue-500 group-hover:translate-x-1 transition-all" />
+                            <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-blue-50 transition-colors">
+                              <ChevronRight className="h-4 w-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
+                            </div>
                           </div>
                         </div>
                       ))}
@@ -661,38 +673,47 @@ export default function Dashboard() {
 
                 {/* Right: Nutrition Snapshot */}
                 <div className="lg:col-span-4 space-y-6">
-                   <h3 className="font-bold text-[#0f1f38] text-xl flex items-center gap-3 font-['Outfit'] tracking-tight">
-                      <Utensils className="h-6 w-6 text-blue-600" />
-                      Nutrition Insights
-                    </h3>
-                    <div className="bg-white border border-gray-100 rounded-[32px] p-8 clinical-shadow space-y-8">
+                   <div className="flex items-center justify-between mb-2">
+                     <h3 className="font-bold text-[#0f1f38] text-xl flex items-center gap-3 font-['Outfit'] tracking-tight">
+                        <Utensils className="h-6 w-6 text-blue-600" />
+                        Nutrition Insights
+                      </h3>
+                   </div>
+                    <div className="bg-white border border-gray-100/50 rounded-[32px] p-8 shadow-[0_8px_30px_rgba(0,0,0,0.04)] space-y-8 relative overflow-hidden group">
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50/50 rounded-full blur-3xl -mr-16 -mt-16 transition-transform duration-700 group-hover:scale-150" />
                       {(() => {
                         const today = new Date().toISOString().split('T')[0];
                         const data = dietSummary?.[today] || { calories: 0, protein: 0, carbs: 0, fat: 0 };
                         return (
                           <>
-                            <div className="text-center relative">
-                              <p className="text-5xl font-bold text-[#0f1f38] font-['Outfit'] tracking-tighter">{data.calories}</p>
-                              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mt-2 font-['Outfit']">Daily Calorie Intake</p>
-                              <div className="mt-6 h-3 w-full bg-gray-50 rounded-full overflow-hidden shadow-inner">
-                                <div className="h-full bg-blue-600 rounded-full shadow-[0_0_12px_rgba(37,99,235,0.3)]" style={{ width: `${Math.min((data.calories / 2000) * 100, 100)}%` }} />
+                            <div className="text-center relative z-10">
+                              <div className="inline-flex items-center justify-center p-8 rounded-full bg-white shadow-[0_8px_30px_rgba(0,0,0,0.06)] border border-gray-50 mb-6 relative">
+                                <svg className="absolute inset-0 w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                                  <circle cx="50" cy="50" r="46" fill="transparent" stroke="#f3f4f6" strokeWidth="8" />
+                                  <circle cx="50" cy="50" r="46" fill="transparent" stroke="#2563eb" strokeWidth="8" strokeDasharray={`${Math.min((data.calories / 2000) * 289, 289)} 289`} strokeLinecap="round" className="transition-all duration-1000 ease-out" />
+                                </svg>
+                                <div>
+                                  <p className="text-4xl font-black text-[#0f1f38] font-['Outfit'] tracking-tighter">{data.calories}</p>
+                                  <p className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em] mt-1 font-['Outfit']">Kcal</p>
+                                </div>
                               </div>
+                              <p className="text-[11px] font-bold text-gray-500 uppercase tracking-[0.2em] font-['Outfit']">Daily Intake</p>
                             </div>
-                            <div className="grid grid-cols-3 gap-3">
+                            <div className="grid grid-cols-3 gap-3 relative z-10">
                               {[
                                 { label: 'Protein', value: data.protein, unit: 'g', color: 'emerald' },
                                 { label: 'Carbs', value: data.carbs, unit: 'g', color: 'blue' },
                                 { label: 'Fat', value: data.fat, unit: 'g', color: 'amber' },
                               ].map(m => (
-                                <div key={m.label} className={`bg-${m.color}-50/50 rounded-2xl p-4 text-center border border-${m.color}-100/50 transition-all hover:scale-[1.05]`}>
-                                  <p className={`text-sm font-bold text-${m.color}-700 font-['Outfit']`}>{m.value}{m.unit}</p>
-                                  <p className={`text-[8px] font-bold text-${m.color}-500 uppercase tracking-widest font-['Outfit'] mt-1`}>{m.label}</p>
+                                <div key={m.label} className={`bg-${m.color}-50/30 rounded-2xl p-4 text-center border border-${m.color}-100/50 transition-transform duration-300 hover:-translate-y-1`}>
+                                  <p className={`text-[15px] font-black text-${m.color}-700 font-['Outfit']`}>{m.value}<span className="text-[10px] ml-0.5">{m.unit}</span></p>
+                                  <p className={`text-[9px] font-bold text-${m.color}-500/80 uppercase tracking-widest font-['Outfit'] mt-1`}>{m.label}</p>
                                 </div>
                               ))}
                             </div>
                             <button 
                               onClick={() => navigate('/diet')}
-                              className="w-full py-4 bg-blue-600 text-white rounded-full text-[11px] font-bold uppercase tracking-widest shadow-[0_12px_30px_rgba(37,99,235,0.2)] hover:bg-blue-700 transition-all font-['Outfit']"
+                              className="relative z-10 w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl text-[11px] font-bold uppercase tracking-widest shadow-[0_8px_20px_rgba(37,99,235,0.25)] hover:shadow-[0_12px_25px_rgba(37,99,235,0.35)] hover:-translate-y-0.5 transition-all duration-300 font-['Outfit']"
                             >
                               Log Food Intake
                             </button>
@@ -718,19 +739,19 @@ export default function Dashboard() {
               </button>
 
               {/* Header */}
-              <div className="bg-white p-10 rounded-[32px] border border-gray-100 clinical-shadow mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-8 transition-all relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50/50 rounded-full blur-3xl -mr-16 -mt-16" />
+              <div className="bg-white/80 backdrop-blur-md p-10 rounded-[32px] border border-gray-100/50 shadow-[0_8px_30px_rgba(0,0,0,0.04)] mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-8 transition-all relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-blue-100/50 rounded-full blur-[80px] -mr-32 -mt-32 transition-transform duration-1000 group-hover:scale-150" />
                 <div className="relative z-10">
-                  <div className="flex flex-wrap items-center gap-3 mb-4">
-                    <span className="bg-blue-600 text-white text-[9px] font-bold uppercase tracking-widest px-3 py-1 rounded-md shadow-lg shadow-blue-500/20 font-['Outfit']">Clinical Analysis</span>
-                    <span className="text-gray-400 text-[10px] font-bold flex items-center uppercase tracking-widest font-['Outfit']"><Clock className="h-3.5 w-3.5 mr-2 text-blue-500"/> Processed: {new Date(selectedReport.analysisTimestamp || selectedReport.createdAt).toLocaleString([], { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                  <div className="flex flex-wrap items-center gap-4 mb-4">
+                    <span className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[9px] font-black uppercase tracking-[0.2em] px-4 py-1.5 rounded-full shadow-[0_4px_15px_rgba(37,99,235,0.2)] font-['Outfit']">Clinical Analysis</span>
+                    <span className="text-gray-500 text-[11px] font-bold flex items-center uppercase tracking-[0.15em] font-['Outfit']"><Clock className="h-4 w-4 mr-2 text-blue-500"/> Processed: {new Date(selectedReport.analysisTimestamp || selectedReport.createdAt).toLocaleString([], { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
                   </div>
-                  <h2 className="text-3xl lg:text-4xl font-bold text-[#0f1f38] font-['Outfit'] tracking-tight">{selectedReport.fileName}</h2>
+                  <h2 className="text-4xl lg:text-5xl font-black text-[#0f1f38] font-['Outfit'] tracking-tight">{selectedReport.fileName}</h2>
                 </div>
                 <div className="flex items-center space-x-4 relative z-10">
                   <button
                     onClick={handleDownloadPDF}
-                    className="flex items-center justify-center space-x-2 bg-white hover:bg-gray-50 border border-gray-200 text-[#0f1f38] text-[11px] font-bold uppercase tracking-widest px-8 py-4 rounded-full transition-all shadow-sm font-['Outfit']"
+                    className="flex items-center justify-center space-x-3 bg-white hover:bg-gray-50 border border-gray-100/80 text-[#0f1f38] text-[11px] font-bold uppercase tracking-[0.15em] px-8 py-4 rounded-full transition-all duration-300 shadow-[0_8px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_25px_rgba(0,0,0,0.08)] hover:-translate-y-1 font-['Outfit']"
                   >
                     <Download className="h-4 w-4 text-blue-600" />
                     <span>Export Data</span>
@@ -777,32 +798,38 @@ export default function Dashboard() {
               )}
 
               {/* Stats Cards */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-                  <div className="flex items-center justify-between mb-4">
-                    <p className="text-[10px] text-gray-500 font-extrabold uppercase tracking-widest">Total Biomarkers</p>
-                    <Activity className="h-4 w-4 text-gray-400" />
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <div className="bg-white/80 backdrop-blur-md border border-gray-100/50 rounded-[24px] p-8 shadow-[0_8px_30px_rgba(0,0,0,0.03)] hover:-translate-y-1 transition-transform duration-300">
+                  <div className="flex items-center justify-between mb-6">
+                    <p className="text-[11px] text-gray-500 font-black uppercase tracking-[0.2em] font-['Outfit']">Total Biomarkers</p>
+                    <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-500">
+                      <Activity className="h-5 w-5" />
+                    </div>
                   </div>
-                  <p className="text-3xl font-black text-[#0f1f38]">{labResults.length}</p>
+                  <p className="text-4xl font-black text-[#0f1f38] font-['Outfit']">{labResults.length}</p>
                 </div>
 
-                <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-                  <div className="flex items-center justify-between mb-4">
-                    <p className="text-[10px] text-gray-500 font-extrabold uppercase tracking-widest">Within Range</p>
-                    <CheckCircle className="h-4 w-4 text-green-500" />
+                <div className="bg-white/80 backdrop-blur-md border border-gray-100/50 rounded-[24px] p-8 shadow-[0_8px_30px_rgba(0,0,0,0.03)] hover:-translate-y-1 transition-transform duration-300">
+                  <div className="flex items-center justify-between mb-6">
+                    <p className="text-[11px] text-gray-500 font-black uppercase tracking-[0.2em] font-['Outfit']">Within Range</p>
+                    <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-500">
+                      <CheckCircle className="h-5 w-5" />
+                    </div>
                   </div>
-                  <p className="text-3xl font-black text-green-700">
+                  <p className="text-4xl font-black text-emerald-600 font-['Outfit']">
                     {labResults.filter(t => (t.status || riskAssessment[t.test_name]?.status || '').toLowerCase() === 'normal').length}
                   </p>
                 </div>
 
-                <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm relative overflow-hidden">
-                   <div className="absolute top-0 right-0 w-2 h-full bg-red-500"></div>
-                  <div className="flex items-center justify-between mb-4">
-                    <p className="text-[10px] text-gray-500 font-extrabold uppercase tracking-widest">Flagged Results</p>
-                    <XCircle className="h-4 w-4 text-red-500" />
+                <div className="bg-white/80 backdrop-blur-md border border-gray-100/50 rounded-[24px] p-8 shadow-[0_8px_30px_rgba(0,0,0,0.03)] hover:-translate-y-1 transition-transform duration-300 relative overflow-hidden">
+                   <div className="absolute top-0 right-0 w-2 h-full bg-gradient-to-b from-rose-400 to-rose-600 shadow-[0_0_15px_rgba(244,63,94,0.5)]"></div>
+                  <div className="flex items-center justify-between mb-6">
+                    <p className="text-[11px] text-gray-500 font-black uppercase tracking-[0.2em] font-['Outfit']">Flagged Results</p>
+                    <div className="w-10 h-10 rounded-full bg-rose-50 flex items-center justify-center text-rose-500">
+                      <XCircle className="h-5 w-5" />
+                    </div>
                   </div>
-                  <p className="text-3xl font-black text-red-600">
+                  <p className="text-4xl font-black text-rose-600 font-['Outfit']">
                     {labResults.filter(t => {
                       const s = (t.status || riskAssessment[t.test_name]?.status || '').toLowerCase()
                       return s && s !== 'normal'
@@ -816,16 +843,16 @@ export default function Dashboard() {
                 <div className="grid lg:grid-cols-2 gap-8 mb-10">
                   
                   {/* Distribution Analysis (Replaced Donut) */}
-                  <div className="bg-white border border-gray-200 rounded-xl p-8 shadow-sm">
-                    <h3 className="text-sm font-extrabold text-[#0f1f38] mb-8 uppercase tracking-widest flex items-center">
+                  <div className="bg-white/80 backdrop-blur-md border border-gray-100/50 rounded-[32px] p-10 shadow-[0_8px_30px_rgba(0,0,0,0.03)]">
+                    <h3 className="text-sm font-black text-[#0f1f38] mb-10 uppercase tracking-[0.25em] flex items-center font-['Outfit']">
                       <Activity className="h-5 w-5 mr-3 text-blue-600" /> Biomarker Distribution
                     </h3>
-                    <div className="space-y-6">
-                      <div className="flex items-center justify-between text-xs font-bold text-gray-500 uppercase tracking-widest">
+                    <div className="space-y-8">
+                      <div className="flex items-center justify-between text-[11px] font-bold text-gray-500 uppercase tracking-[0.2em] font-['Outfit']">
                         <span>Health Overview</span>
                         <span>{labResults.length} Total</span>
                       </div>
-                      <div className="h-10 w-full flex rounded-xl overflow-hidden shadow-inner bg-gray-100">
+                      <div className="h-12 w-full flex rounded-2xl overflow-hidden shadow-inner bg-gray-50 border border-gray-100/50">
                         {(() => {
                           const normalCount = labResults.filter(t => (t.status || riskAssessment[t.test_name]?.status || '').toLowerCase() === 'normal').length;
                           const highCount = labResults.filter(t => (t.status || riskAssessment[t.test_name]?.status || '').toLowerCase() === 'high').length;
@@ -838,67 +865,66 @@ export default function Dashboard() {
 
                           return (
                             <>
-                              <div style={{ width: `${normalPct}%` }} className="bg-emerald-500 h-full flex items-center justify-center text-[10px] text-white font-black">{normalCount > 0 ? 'NORMAL' : ''}</div>
-                              <div style={{ width: `${highPct}%` }} className="bg-rose-500 h-full flex items-center justify-center text-[10px] text-white font-black">{highCount > 0 ? 'HIGH' : ''}</div>
-                              <div style={{ width: `${lowPct}%` }} className="bg-amber-500 h-full flex items-center justify-center text-[10px] text-white font-black">{lowCount > 0 ? 'LOW' : ''}</div>
+                              <div style={{ width: `${normalPct}%` }} className="bg-emerald-500 h-full flex items-center justify-center text-[11px] text-white font-black tracking-widest">{normalCount > 0 ? 'NORMAL' : ''}</div>
+                              <div style={{ width: `${highPct}%` }} className="bg-rose-500 h-full flex items-center justify-center text-[11px] text-white font-black tracking-widest">{highCount > 0 ? 'HIGH' : ''}</div>
+                              <div style={{ width: `${lowPct}%` }} className="bg-amber-500 h-full flex items-center justify-center text-[11px] text-white font-black tracking-widest">{lowCount > 0 ? 'LOW' : ''}</div>
                             </>
                           )
                         })()}
                       </div>
-                      <div className="grid grid-cols-3 gap-4">
-                        <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-100 text-center">
-                          <p className="text-[10px] font-black text-emerald-700 uppercase tracking-widest mb-1">Normal</p>
-                          <p className="text-xl font-black text-emerald-800">{labResults.filter(t => (t.status || riskAssessment[t.test_name]?.status || '').toLowerCase() === 'normal').length}</p>
+                      <div className="grid grid-cols-3 gap-6">
+                        <div className="p-5 rounded-[20px] bg-emerald-50/50 border border-emerald-100/50 text-center transition-transform hover:-translate-y-1">
+                          <p className="text-[10px] font-black text-emerald-700 uppercase tracking-[0.2em] mb-2 font-['Outfit']">Normal</p>
+                          <p className="text-3xl font-black text-emerald-800 font-['Outfit']">{labResults.filter(t => (t.status || riskAssessment[t.test_name]?.status || '').toLowerCase() === 'normal').length}</p>
                         </div>
-                        <div className="p-3 rounded-lg bg-rose-50 border border-rose-100 text-center">
-                          <p className="text-[10px] font-black text-rose-700 uppercase tracking-widest mb-1">Flagged</p>
-                          <p className="text-xl font-black text-rose-800">{labResults.filter(t => {
+                        <div className="p-5 rounded-[20px] bg-rose-50/50 border border-rose-100/50 text-center transition-transform hover:-translate-y-1">
+                          <p className="text-[10px] font-black text-rose-700 uppercase tracking-[0.2em] mb-2 font-['Outfit']">Flagged</p>
+                          <p className="text-3xl font-black text-rose-800 font-['Outfit']">{labResults.filter(t => {
                             const s = (t.status || riskAssessment[t.test_name]?.status || '').toLowerCase();
                             return s && s !== 'normal' && s !== 'unknown';
                           }).length}</p>
                         </div>
-                        <div className="p-3 rounded-lg bg-blue-50 border border-blue-100 text-center">
-                          <p className="text-[10px] font-black text-blue-700 uppercase tracking-widest mb-1">Efficiency</p>
-                          <p className="text-xl font-black text-blue-800">{Math.round((labResults.filter(t => (t.status || riskAssessment[t.test_name]?.status || '').toLowerCase() === 'normal').length / labResults.length) * 100)}%</p>
+                        <div className="p-5 rounded-[20px] bg-blue-50/50 border border-blue-100/50 text-center transition-transform hover:-translate-y-1">
+                          <p className="text-[10px] font-black text-blue-700 uppercase tracking-[0.2em] mb-2 font-['Outfit']">Efficiency</p>
+                          <p className="text-3xl font-black text-blue-800 font-['Outfit']">{Math.round((labResults.filter(t => (t.status || riskAssessment[t.test_name]?.status || '').toLowerCase() === 'normal').length / labResults.length) * 100)}%</p>
                         </div>
                       </div>
                     </div>
                   </div>
 
                   {/* Biomarker Health Strips (Replaced Bar Chart) */}
-                  <div className="bg-white border border-gray-100 rounded-[32px] p-10 clinical-shadow overflow-hidden">
-                     <h3 className="text-sm font-bold text-[#0f1f38] mb-10 uppercase tracking-[0.25em] flex items-center font-['Outfit']">
-                      <Sparkles className="h-5 w-5 mr-4 text-blue-600" /> Physiological Markers
+                  <div className="bg-white/80 backdrop-blur-md border border-gray-100/50 rounded-[32px] p-10 shadow-[0_8px_30px_rgba(0,0,0,0.03)] overflow-hidden">
+                     <h3 className="text-sm font-black text-[#0f1f38] mb-10 uppercase tracking-[0.25em] flex items-center font-['Outfit']">
+                      <Sparkles className="h-5 w-5 mr-3 text-blue-600" /> Physiological Markers
                     </h3>
                     <div className="space-y-8">
                       {labResults.slice(0, 4).map((result, idx) => {
                         const status = (result.status || riskAssessment[result.test_name]?.status || '').toLowerCase();
                         const isNormal = status === 'normal';
-                        const colorClass = status === 'high' ? 'bg-rose-500' : status === 'low' ? 'bg-amber-500' : 'bg-blue-600';
-                        const textClass = status === 'high' ? 'text-rose-600' : status === 'low' ? 'text-amber-600' : 'text-blue-600';
+                        const colorClass = status === 'high' ? 'bg-rose-500' : status === 'low' ? 'bg-amber-500' : 'bg-blue-500';
                         
                         return (
                           <div key={idx} className="relative group">
-                            <div className="flex justify-between items-end mb-3">
+                            <div className="flex justify-between items-end mb-4">
                               <div>
-                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest font-['Outfit'] mb-1">{result.test_name}</p>
-                                <p className="text-lg font-bold text-[#0f1f38] font-['Outfit'] tracking-tight">{result.value} <span className="text-[10px] text-gray-400 uppercase ml-1 font-bold">{result.unit}</span></p>
+                                <p className="text-[11px] font-bold text-gray-500 uppercase tracking-[0.2em] font-['Outfit'] mb-1">{result.test_name}</p>
+                                <p className="text-2xl font-black text-[#0f1f38] font-['Outfit'] tracking-tight">{result.value} <span className="text-[11px] text-gray-400 uppercase ml-1 font-bold">{result.unit}</span></p>
                               </div>
-                              <span className={`text-[9px] font-bold uppercase tracking-[0.2em] font-['Outfit'] px-3 py-1 rounded-md border ${isNormal ? 'bg-blue-50 text-blue-600 border-blue-100' : 'bg-gray-50 text-gray-600 border-gray-100'}`}>
+                              <span className={`text-[10px] font-black uppercase tracking-[0.2em] font-['Outfit'] px-4 py-1.5 rounded-full border ${isNormal ? 'bg-blue-50/50 text-blue-600 border-blue-100/50 shadow-sm' : 'bg-gray-50/50 text-gray-600 border-gray-100/50 shadow-sm'}`}>
                                 {status.toUpperCase()}
                               </span>
                             </div>
-                            <div className="h-2 w-full bg-gray-50 rounded-full overflow-hidden shadow-inner">
+                            <div className="h-3 w-full bg-gray-50 rounded-full overflow-hidden shadow-inner border border-gray-100/50">
                               <motion.div 
                                 initial={{ width: 0 }}
                                 animate={{ width: isNormal ? '70%' : '95%' }}
-                                className={`h-full ${colorClass} shadow-[0_0_12px_rgba(37,99,235,0.2)]`}
+                                className={`h-full ${colorClass} shadow-[0_0_15px_rgba(37,99,235,0.3)]`}
                               />
                             </div>
                             {/* Range Indicator */}
-                            <div className="flex justify-between mt-2 px-1">
-                              <span className="text-[8px] font-bold text-gray-300 font-['Outfit'] uppercase tracking-widest">Baseline: {result.reference_range?.split('-')[0] || '0'}</span>
-                              <span className="text-[8px] font-bold text-gray-300 font-['Outfit'] uppercase tracking-widest">Upper: {result.reference_range?.split('-')[1] || '100'}</span>
+                            <div className="flex justify-between mt-3 px-1">
+                              <span className="text-[9px] font-bold text-gray-400 font-['Outfit'] uppercase tracking-widest">Baseline: {result.reference_range?.split('-')[0] || '0'}</span>
+                              <span className="text-[9px] font-bold text-gray-400 font-['Outfit'] uppercase tracking-widest">Upper: {result.reference_range?.split('-')[1] || '100'}</span>
                             </div>
                           </div>
                         );

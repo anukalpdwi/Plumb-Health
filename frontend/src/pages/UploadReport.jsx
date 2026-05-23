@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Activity, Brain, Shield, Heart, CheckCircle, FileSearch, Stethoscope } from 'lucide-react'
+import { Activity, Brain, Shield, Heart, CheckCircle, FileSearch, Stethoscope, LogOut, Crown, FileText, UploadCloud, Video, Sparkles, Image as ImageIcon, X } from 'lucide-react'
 import { authAPI } from '../api/authAPI'
 
 export default function UploadReport() {
@@ -68,7 +68,7 @@ export default function UploadReport() {
     e.preventDefault()
     e.stopPropagation()
     if (dropZoneRef.current) {
-      dropZoneRef.current.classList.add('border-blue-500', 'bg-blue-100')
+      dropZoneRef.current.classList.add('border-blue-400', 'bg-blue-50/50', 'shadow-[0_8px_30px_rgb(37,99,235,0.12)]')
     }
   }
 
@@ -76,7 +76,7 @@ export default function UploadReport() {
     e.preventDefault()
     e.stopPropagation()
     if (dropZoneRef.current) {
-      dropZoneRef.current.classList.remove('border-blue-500', 'bg-blue-100')
+      dropZoneRef.current.classList.remove('border-blue-400', 'bg-blue-50/50', 'shadow-[0_8px_30px_rgb(37,99,235,0.12)]')
     }
   }
 
@@ -84,7 +84,7 @@ export default function UploadReport() {
     e.preventDefault()
     e.stopPropagation()
     if (dropZoneRef.current) {
-      dropZoneRef.current.classList.remove('border-blue-500', 'bg-blue-100')
+      dropZoneRef.current.classList.remove('border-blue-400', 'bg-blue-50/50', 'shadow-[0_8px_30px_rgb(37,99,235,0.12)]')
     }
 
     const droppedFile = e.dataTransfer.files[0]
@@ -142,11 +142,11 @@ export default function UploadReport() {
       setIsAnalyzing(true)
       try {
         setAnalysisStage('ocr')
-        await new Promise(r => setTimeout(r, 500))
+        await new Promise(r => setTimeout(r, 600))
         setAnalysisStage('lab')
-        await new Promise(r => setTimeout(r, 500))
+        await new Promise(r => setTimeout(r, 600))
         setAnalysisStage('risk')
-        await new Promise(r => setTimeout(r, 500))
+        await new Promise(r => setTimeout(r, 600))
         setAnalysisStage('lifestyle')
 
         const analyzeResponse = await authAPI.analyzeReport({
@@ -154,7 +154,7 @@ export default function UploadReport() {
         })
 
         setAnalysisStage('safety')
-        await new Promise(r => setTimeout(r, 400))
+        await new Promise(r => setTimeout(r, 500))
 
         if (analyzeResponse.data.success) {
           setAnalysisStage('done')
@@ -202,72 +202,124 @@ export default function UploadReport() {
   }
 
   if (!user) {
-    return <div className="text-center mt-20">Loading...</div>
+    return (
+      <div className="min-h-screen bg-[#fafbfc] flex items-center justify-center">
+        <div className="w-10 h-10 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+      </div>
+    )
   }
 
   return (
-    <div className="min-h-screen bg-[#fafbfc] text-[#0f1f38] font-sans">
-      {/* Navigation Bar */}
-      <nav className="bg-white/80 backdrop-blur-xl shadow-sm border-b border-gray-100 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-3 cursor-pointer" onClick={() => navigate('/')}>
-            <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
-              <Activity className="h-5 w-5 text-white" />
+    <div className="min-h-screen bg-[#fafbfc] text-slate-800 font-sans selection:bg-blue-600/20 pt-[80px]">
+      
+      {/* ───────── Top Navigation (Premium Light) ───────── */}
+      <nav className="fixed w-full top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/50 h-16 transition-all duration-300">
+        <div className="max-w-[1600px] mx-auto px-4 lg:px-8 h-full flex justify-between items-center">
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 cursor-pointer group" onClick={() => navigate('/')}>
+              <img src="/logo.png" alt="Plumb Health Logo" className="w-8 h-8 object-contain drop-shadow-sm group-hover:scale-105 transition-transform duration-500" />
+              <span className="text-xl font-bold text-slate-800 hidden sm:block tracking-tight font-['Outfit'] select-none">
+                Plumb<span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent font-black ml-0.5">Health</span>
+              </span>
             </div>
-            <span className="text-xl font-bold text-[#0f1f38] font-['Outfit'] tracking-tight">Plumb <span className="text-blue-600">Health</span></span>
           </div>
-          <div className="space-x-6 flex items-center text-sm font-bold uppercase tracking-[0.1em] font-['Outfit']">
-            <a href="/dashboard" className="text-gray-500 hover:text-blue-600 transition-colors">Dashboard</a>
-            <a href="/history" className="text-gray-500 hover:text-blue-600 transition-colors">History</a>
-            <a href="/profile" className="text-gray-500 hover:text-blue-600 transition-colors">Profile</a>
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={() => navigate('/dashboard')}
+              className="text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors font-['Outfit'] uppercase tracking-widest px-2"
+            >
+              Dashboard
+            </button>
+            <div className="h-5 w-[1px] bg-slate-200/70 hidden sm:block"></div>
+            
+            {/* User Profile Info Card */}
+            <div className="hidden sm:flex items-center gap-3 pl-2 select-none">
+              <div className="flex flex-col items-end">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-semibold text-slate-800 font-['Outfit']">{user.name}</span>
+                  {user.membershipType === 'pro' && (
+                    <span className="text-[10px] text-amber-600 font-bold uppercase tracking-wider font-['Outfit'] flex items-center">
+                      <Crown className="h-3.5 w-3.5 text-amber-500 fill-amber-500/20" />
+                    </span>
+                  )}
+                </div>
+                <span className="text-[9px] text-slate-400 font-medium tracking-normal font-['Outfit']">ID: {user.id?.substring(0,6) || user._id?.substring(0,6) || 'N/A'}</span>
+              </div>
+              <div className="relative">
+                <div className="w-9 h-9 rounded-xl bg-slate-50 text-slate-700 flex items-center justify-center font-bold text-sm border border-slate-200/80 font-['Outfit']">
+                   {user.name?.charAt(0).toUpperCase()}
+                </div>
+                {user.membershipType === 'pro' && (
+                  <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-amber-500 border border-white rounded-full shadow-sm" />
+                )}
+              </div>
+            </div>
+            
             <button
               onClick={handleLogout}
-              className="text-gray-400 hover:text-red-500 transition-colors"
+              className="p-2 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-50 transition-all duration-200"
+              title="Sign Out"
             >
-              Logout
+              <LogOut className="h-5 w-5" />
             </button>
           </div>
         </div>
       </nav>
 
-      {/* Main Content */}
-      <div className="max-w-2xl mx-auto px-4 py-8">
+      {/* ───────── Main Content ───────── */}
+      <div className="max-w-2xl mx-auto px-4 py-8 relative">
+        
+        {/* Background glow effects */}
+        <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-blue-400/5 blur-[120px] rounded-full pointer-events-none -z-10" />
 
         {/* AI Analysis Progress Overlay */}
         {isAnalyzing && (
-          <div className="bg-white/90 backdrop-blur-xl rounded-[32px] clinical-shadow border border-white p-10 mb-8 text-center">
-            <div className="mb-6">
-              <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6">
+          <div className="bg-white/80 backdrop-blur-2xl rounded-[32px] shadow-[0_8px_40px_rgb(0,0,0,0.06)] border border-white/60 p-12 mb-8 text-center relative overflow-hidden">
+            {/* Shimmer effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent translate-x-[-100%] animate-[shimmer_2s_infinite]" />
+            
+            <div className="mb-8 relative z-10">
+              <div className="w-24 h-24 bg-gradient-to-tr from-blue-50 to-indigo-50 rounded-[24px] shadow-inner border border-blue-100/50 flex items-center justify-center mx-auto mb-8 relative">
+                <div className="absolute inset-0 rounded-[24px] bg-blue-400/20 animate-ping opacity-20" />
                 <Brain className="h-10 w-10 text-blue-600 animate-pulse" />
+                <Sparkles className="absolute -top-2 -right-2 h-6 w-6 text-amber-400 animate-bounce" />
               </div>
-              <h3 className="text-3xl font-bold text-[#0f1f38] mt-4 font-['Outfit'] tracking-tight">AI Agents Analyzing Your Report</h3>
-              <p className="text-gray-500 text-sm mt-2 font-medium">Running clinical pipeline...</p>
+              <h3 className="text-3xl font-bold text-slate-800 mt-4 font-['Outfit'] tracking-tight">AI Agents Analyzing</h3>
+              <p className="text-slate-500 text-sm mt-3 font-medium">Running advanced clinical pipeline...</p>
             </div>
-            <div className="space-y-3 text-left max-w-sm mx-auto">
+            
+            <div className="space-y-4 text-left max-w-sm mx-auto relative z-10">
               {[
-                { key: 'ocr', icon: FileSearch, label: 'OCR Agent: Extracting text from report...' },
-                { key: 'lab', icon: Stethoscope, label: 'Lab Agent: Identifying test values & ranges...' },
-                { key: 'risk', icon: Activity, label: 'Risk Agent: Evaluating health risks...' },
-                { key: 'lifestyle', icon: Heart, label: 'Lifestyle Agent: Generating guidance...' },
-                { key: 'safety', icon: Shield, label: 'Safety Agent: Ensuring safe output...' },
-                { key: 'done', icon: CheckCircle, label: 'Analysis complete! Redirecting...' },
+                { key: 'ocr', icon: FileSearch, label: 'Extracting medical text...' },
+                { key: 'lab', icon: Stethoscope, label: 'Identifying test values...' },
+                { key: 'risk', icon: Activity, label: 'Evaluating health risks...' },
+                { key: 'lifestyle', icon: Heart, label: 'Generating lifestyle guidance...' },
+                { key: 'safety', icon: Shield, label: 'Running safety checks...' },
+                { key: 'done', icon: CheckCircle, label: 'Analysis complete!' },
               ].map((step) => {
                 const stages = ['ocr', 'lab', 'risk', 'lifestyle', 'safety', 'done']
                 const current = stages.indexOf(analysisStage)
                 const stepIdx = stages.indexOf(step.key)
                 const isActive = stepIdx === current
                 const isDone = stepIdx < current
+                
                 return (
-                  <div key={step.key} className={`flex items-center space-x-3 p-2 rounded-lg transition-all duration-300 ${
-                    isActive ? 'bg-blue-50 border border-blue-200' : isDone ? 'opacity-60' : 'opacity-30'
+                  <div key={step.key} className={`flex items-center space-x-4 p-3 rounded-2xl transition-all duration-500 ${
+                    isActive ? 'bg-white shadow-sm border border-blue-100/50 translate-x-2' : isDone ? 'opacity-70' : 'opacity-40'
                   }`}>
-                    <step.icon className={`h-5 w-5 flex-shrink-0 ${
-                      isDone ? 'text-green-500' : isActive ? 'text-blue-600 animate-pulse' : 'text-gray-400'
-                    }`} />
-                    <span className={`text-sm font-medium ${isActive ? 'text-blue-700' : isDone ? 'text-green-700' : 'text-gray-500'}`}>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-300 ${
+                      isActive ? 'bg-blue-50' : isDone ? 'bg-emerald-50' : 'bg-slate-50'
+                    }`}>
+                      <step.icon className={`h-4 w-4 flex-shrink-0 ${
+                        isDone ? 'text-emerald-500' : isActive ? 'text-blue-600 animate-pulse' : 'text-slate-400'
+                      }`} />
+                    </div>
+                    <span className={`text-sm font-semibold font-['Outfit'] tracking-wide ${
+                      isActive ? 'text-blue-700' : isDone ? 'text-emerald-700' : 'text-slate-500'
+                    }`}>
                       {step.label}
                     </span>
-                    {isDone && <CheckCircle className="h-4 w-4 text-green-500 ml-auto" />}
+                    {isDone && <CheckCircle className="h-4 w-4 text-emerald-500 ml-auto" />}
                   </div>
                 )
               })}
@@ -275,64 +327,67 @@ export default function UploadReport() {
           </div>
         )}
 
-        <div className={`bg-white/90 backdrop-blur-xl rounded-[32px] clinical-shadow border border-white p-10 ${isAnalyzing ? 'hidden' : ''}`}>
+        <div className={`bg-white/70 backdrop-blur-2xl rounded-[32px] shadow-[0_8px_40px_rgb(0,0,0,0.04)] border border-white/60 p-10 lg:p-12 transition-all duration-500 ${isAnalyzing ? 'hidden' : 'opacity-100'}`}>
           <div className="text-center mb-10">
-            <h2 className="text-4xl font-bold text-[#0f1f38] mb-3 tracking-tight font-['Outfit']">Upload Health Report</h2>
-            <p className="text-gray-500 font-medium">Upload your medical report (PDF, JPG, PNG) for clinical intelligence analysis.</p>
+            <h2 className="text-4xl font-black text-slate-800 mb-4 tracking-tight font-['Outfit']">Upload Report</h2>
+            <p className="text-slate-500 font-medium text-sm">Provide your medical report (PDF, JPG, PNG) for deep clinical intelligence analysis.</p>
           </div>
 
           {/* Success Message */}
           {uploadSuccess && uploadedFile && (
-            <div className="bg-green-50 border border-green-200 text-green-700 px-5 py-4 rounded-2xl mb-8">
-              <div className="flex items-center">
-                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <div>
-                  <p className="font-semibold">Upload Successful!</p>
-                  <p className="text-sm">File: {uploadedFile.originalName}</p>
-                  <p className="text-sm">Ready for AI analysis</p>
-                </div>
+            <div className="bg-emerald-50/80 backdrop-blur-sm border border-emerald-200/50 text-emerald-700 p-5 rounded-[20px] mb-8 shadow-sm flex items-start gap-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
+              <div className="bg-emerald-100 p-2 rounded-full">
+                <CheckCircle className="w-5 h-5 text-emerald-600" />
+              </div>
+              <div>
+                <p className="font-bold font-['Outfit']">Upload Successful!</p>
+                <p className="text-sm mt-1 opacity-90">File: {uploadedFile.originalName}</p>
+                <p className="text-xs mt-1 font-semibold uppercase tracking-wider text-emerald-600/80">Ready for AI analysis</p>
               </div>
             </div>
           )}
 
           {/* Error Message */}
           {uploadError && (
-            <div className="bg-red-50/80 backdrop-blur-sm border border-red-300 text-red-700 px-4 py-3 rounded-2xl mb-6">
-              {uploadError}
+            <div className="bg-rose-50/80 backdrop-blur-sm border border-rose-200/50 text-rose-700 p-5 rounded-[20px] mb-6 flex items-start gap-3 shadow-sm animate-in fade-in slide-in-from-top-2 duration-300">
+              <Shield className="w-5 h-5 text-rose-500 mt-0.5" />
+              <span className="font-medium text-sm">{uploadError}</span>
             </div>
           )}
 
           {/* File Preview */}
           {file && (
-            <div className="mb-6 p-4 bg-gray-50/80 backdrop-blur-sm rounded-2xl border border-gray-200">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
+            <div className="mb-8 p-5 bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_20px_rgb(0,0,0,0.03)] group relative overflow-hidden transition-all duration-300">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-50/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="flex items-center justify-between relative z-10">
+                <div className="flex items-center gap-5">
                   {preview ? (
-                    <img src={preview} alt="Preview" className="w-16 h-16 object-cover rounded mr-4" />
+                    <div className="relative w-16 h-16 rounded-2xl overflow-hidden shadow-sm border border-slate-200/50">
+                      <img src={preview} alt="Preview" className="w-full h-full object-cover" />
+                    </div>
                   ) : (
-                    <div className="w-16 h-16 bg-blue-100 rounded flex items-center justify-center mr-4">
-                      <svg className="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
-                      </svg>
+                    <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center shadow-inner border border-blue-100/50">
+                      <FileText className="w-7 h-7 text-blue-500" />
                     </div>
                   )}
                   <div>
-                    <p className="font-semibold text-gray-800">{file.name}</p>
-                    <p className="text-sm text-gray-600">
-                      {(file.size / 1024 / 1024).toFixed(2)} MB • {file.type.split('/')[1].toUpperCase()}
-                    </p>
+                    <p className="font-bold text-slate-800 font-['Outfit'] tracking-tight truncate max-w-[200px] sm:max-w-[300px]">{file.name}</p>
+                    <div className="flex items-center gap-2 mt-1.5">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md">
+                        {file.type.split('/')[1].toUpperCase()}
+                      </span>
+                      <span className="text-xs font-semibold text-slate-500">
+                        {(file.size / 1024 / 1024).toFixed(2)} MB
+                      </span>
+                    </div>
                   </div>
                 </div>
                 <button
                   onClick={removeFile}
-                  className="text-red-500 hover:text-red-700 p-1"
+                  className="w-8 h-8 rounded-full bg-slate-50 text-slate-400 hover:text-rose-500 hover:bg-rose-50 flex items-center justify-center transition-all duration-200 disabled:opacity-50"
                   disabled={uploading}
                 >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
+                  <X className="w-4 h-4" />
                 </button>
               </div>
             </div>
@@ -340,16 +395,21 @@ export default function UploadReport() {
 
           {/* Upload Progress */}
           {uploading && (
-            <div className="mb-6">
-              <div className="flex justify-between text-sm text-gray-600 mb-2">
-                <span>Uploading...</span>
-                <span>{uploadProgress}%</span>
+            <div className="mb-8">
+              <div className="flex justify-between items-center text-xs font-bold uppercase tracking-widest text-slate-500 mb-3 font-['Outfit']">
+                <span className="flex items-center gap-2">
+                  <UploadCloud className="w-3.5 h-3.5 animate-bounce" />
+                  Uploading securely...
+                </span>
+                <span className="text-blue-600">{uploadProgress}%</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="w-full bg-slate-100 rounded-full h-2.5 shadow-inner overflow-hidden">
                 <div
-                  className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                  className="bg-gradient-to-r from-blue-500 to-indigo-500 h-full rounded-full transition-all duration-300 relative"
                   style={{ width: `${uploadProgress}%` }}
-                ></div>
+                >
+                  <div className="absolute inset-0 bg-white/20 w-full animate-[shimmer_1s_infinite]" />
+                </div>
               </div>
             </div>
           )}
@@ -358,18 +418,19 @@ export default function UploadReport() {
           {!file && (
             <div
               ref={dropZoneRef}
-              className="border-2 border-dashed border-gray-300 rounded-2xl p-12 bg-gray-50/80 backdrop-blur-sm mb-6 hover:border-blue-400 hover:bg-blue-50/80 transition-all duration-200 cursor-pointer"
+              className="border-[1.5px] border-dashed border-slate-300/80 rounded-[32px] p-12 bg-white/40 backdrop-blur-sm mb-8 hover:border-blue-400/80 hover:bg-blue-50/30 transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-[0_8px_30px_rgb(37,99,235,0.08)] relative overflow-hidden"
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}
             >
-              <div className="text-center">
-                <svg className="mx-auto h-12 w-12 text-gray-400 mb-4" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                  <path d="M28 8H12a4 4 0 00-4 4v20a4 4 0 004 4h24a4 4 0 004-4V20m-14-8v12m0 0l4-4m-4 4l-4-4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                <p className="text-gray-700 font-semibold mb-2">Drag and drop your report here</p>
-                <p className="text-gray-600 mb-4">or click to select a file</p>
+              <div className="text-center relative z-10">
+                <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500 group-hover:bg-blue-100">
+                  <UploadCloud className="h-10 w-10 text-blue-500 drop-shadow-sm" />
+                </div>
+                <p className="text-slate-700 font-bold text-lg mb-2 font-['Outfit'] tracking-tight">Drag and drop your report</p>
+                <p className="text-slate-400 font-medium text-sm mb-8">or click to browse from your computer</p>
+                
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -377,9 +438,10 @@ export default function UploadReport() {
                   onChange={handleFileInputChange}
                   className="hidden"
                 />
+                
                 <button
                   type="button"
-                  className="bg-blue-600 text-white font-bold py-4 px-8 rounded-full hover:bg-blue-700 transition-all duration-300 shadow-[0_8px_20px_rgba(37,99,235,0.2)] hover:shadow-[0_12px_25px_rgba(37,99,235,0.3)] transform hover:-translate-y-0.5 uppercase tracking-[0.2em] text-[10px] font-['Outfit']"
+                  className="bg-slate-900 text-white font-bold py-3.5 px-8 rounded-xl hover:bg-slate-800 transition-all duration-300 shadow-[0_8px_20px_rgba(15,23,42,0.15)] hover:shadow-[0_12px_25px_rgba(15,23,42,0.25)] transform hover:-translate-y-0.5 uppercase tracking-[0.15em] text-[11px] font-['Outfit']"
                   onClick={(e) => {
                     e.stopPropagation()
                     fileInputRef.current?.click()
@@ -392,23 +454,41 @@ export default function UploadReport() {
           )}
 
           {/* File Requirements */}
-          <div className="bg-gray-50/80 backdrop-blur-sm border border-gray-200 rounded-2xl p-4 mb-6">
-            <h4 className="font-semibold text-gray-800 mb-2">Supported Formats</h4>
-            <ul className="text-gray-700 text-sm space-y-1">
-              <li>✓ PDF files</li>
-              <li>✓ JPG/JPEG images</li>
-              <li>✓ PNG images</li>
-              <li>✓ Max file size: 10MB</li>
-            </ul>
+          <div className="bg-slate-50/80 backdrop-blur-sm border border-slate-100 rounded-[24px] p-6 mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h4 className="font-bold text-slate-800 text-sm mb-1 font-['Outfit'] tracking-wide">Supported Formats</h4>
+              <p className="text-slate-500 text-xs font-medium">Upload high quality scans or images.</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-lg border border-slate-200/60 shadow-sm">
+                <FileText className="w-3.5 h-3.5 text-rose-500" />
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600">PDF</span>
+              </div>
+              <div className="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-lg border border-slate-200/60 shadow-sm">
+                <ImageIcon className="w-3.5 h-3.5 text-blue-500" />
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600">JPG/PNG</span>
+              </div>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 ml-1 bg-slate-100 px-2 py-1 rounded-md">Max 10MB</span>
+            </div>
           </div>
 
           {/* Upload Button */}
           <button
             onClick={handleUpload}
             disabled={!file || uploading}
-            className="w-full bg-blue-600 text-white font-bold py-5 rounded-full hover:bg-blue-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_10px_25px_rgba(37,99,235,0.25)] hover:shadow-[0_15px_30px_rgba(37,99,235,0.35)] transform hover:-translate-y-0.5 uppercase tracking-[0.2em] text-[11px] font-['Outfit'] mt-6"
+            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-5 rounded-[20px] hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_10px_25px_rgba(37,99,235,0.25)] hover:shadow-[0_15px_30px_rgba(37,99,235,0.35)] transform hover:-translate-y-0.5 uppercase tracking-[0.2em] text-xs font-['Outfit'] flex items-center justify-center gap-2 group"
           >
-            {uploading ? 'Uploading securely...' : 'Upload & Analyze Report'}
+            {uploading ? (
+              <span className="flex items-center gap-2">
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Uploading securely...
+              </span>
+            ) : (
+              <span className="flex items-center gap-2">
+                <Brain className="w-4 h-4 group-hover:animate-pulse" />
+                Upload & Analyze Report
+              </span>
+            )}
           </button>
         </div>
       </div>

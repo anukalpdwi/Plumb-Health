@@ -37,9 +37,7 @@ export default function LandingPage() {
       <nav className="fixed w-full top-0 z-[100] bg-white/70 backdrop-blur-2xl border-b border-gray-100/50 py-4 lg:py-5 transition-all">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-16 flex justify-between items-center">
           <div className="flex items-center space-x-3 cursor-pointer group" onClick={() => navigate('/')}>
-            <div className="flex items-center justify-center w-10 h-10 lg:w-11 lg:h-11 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform duration-500">
-              <Hexagon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
-            </div>
+            <img src="/logo.png" alt="Plumb Health Logo" className="w-10 h-10 lg:w-12 lg:h-12 object-contain group-hover:scale-105 transition-transform duration-500 drop-shadow-md" />
             <span className="text-xl lg:text-2xl font-bold tracking-tight text-[#0f1f38] font-['Outfit']">
               Plumb <span className="text-blue-600">Health</span>
             </span>
@@ -573,10 +571,8 @@ export default function LandingPage() {
         <div className="max-w-[1440px] mx-auto px-6 lg:px-16">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-20 mb-20 lg:mb-32">
             <div className="lg:col-span-6">
-               <div className="flex items-center space-x-3 mb-6 lg:mb-10">
-                <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center">
-                  <Hexagon className="h-5 w-5 text-white" />
-                </div>
+               <div className="flex items-center space-x-3 mb-6 lg:mb-10 cursor-pointer group" onClick={() => navigate('/')}>
+                <img src="/logo.png" alt="Plumb Health Logo" className="w-10 h-10 lg:w-12 lg:h-12 object-contain group-hover:scale-105 transition-transform duration-500 drop-shadow-md" />
                 <span className="text-2xl lg:text-3xl font-bold tracking-tight text-[#0f1f38] font-['Outfit']">Plumb <span className="text-blue-600">Health</span></span>
               </div>
               <p className="text-gray-400 text-base lg:text-lg font-light leading-relaxed mb-8 lg:mb-12 max-w-md">
