@@ -121,4 +121,3 @@ graph TD
 This project is licensed under the ISC License.
 
 ---
-**Developed by Antigravity AI** | [Plumb Health Report](./PLUMB_HEALTH_REPORT.md)
